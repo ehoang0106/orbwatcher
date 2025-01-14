@@ -20,29 +20,30 @@ async def on_ready():
 
 @tasks.loop(minutes=60)
 async def send_price_updates():
-    channel = bot.get_channel(int(CHANNEL_ID))
-    if channel is None:
-        print("Channel not found")
-        return
+  channel = bot.get_channel(int(CHANNEL_ID))
+  if channel is None:
+      print("Channel not found")
+      return
 
-    data = search_exalted()
-    message = ""
-    for item in data:
-        part = f"<:{item['formatted_currency_name']}:{item['emoji_id']}> **{item['currency_name']}**: <:ExaltedOrb:1328816616854523924> **`{item['price_value']}`** -> <:{item['formatted_currency_name']}:{item['emoji_id']}> **`{item['exchange_price_value']}`**\n"
-        if len(message) + len(part) > 2000:
-            await channel.send(message)
-            message = part
-        else:
-            message += part
+  data = search_exalted()
+  message = ""
+  for item in data:
+      part = f"<:{item['formatted_currency_name']}:{item['emoji_id']}> **{item['currency_name']}**: <:ExaltedOrb:1328816616854523924> **`{item['price_value']}`** -> <:{item['formatted_currency_name']}:{item['emoji_id']}> **`{item['exchange_price_value']}`**\n"
+      if len(message) + len(part) > 2000:
+          await channel.send(message)
+          message = part
+      else:
+          message += part
 
-    if message:
-        await channel.send(message)
-    await channel.send(f"Last update: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+  if message:
+      await channel.send(message)
+  await channel.send(f"Last update: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 @bot.command(name='start')
 async def start(ctx):
-    send_price_updates.start()
-    await ctx.send("Bot started tracking prices every 1 hour")
+  await ctx.send("Bot started tracking prices every 1 hour")
+  send_price_updates.start()
+    
 
 @bot.command(name='price')
 async def price(ctx):

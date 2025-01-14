@@ -69,7 +69,7 @@ def search_exalted():
                         })
     last_update = soup.find('div', {'class': 'timestamp'}).text
     if last_update:
-        print(f"Last update: {last_update}")
+        print(f"{last_update}")
         
     
     

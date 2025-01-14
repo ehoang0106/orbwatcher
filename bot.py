@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands, tasks
 from dotenv import dotenv_values
 from main import search_exalted
-from discord.utils import get
+
 
 config = dotenv_values(".env")
 TOKEN = config["DISCORD_TOKEN"]

@@ -1,3 +1,4 @@
 /venv
 .env
 source.html
+/__pycache__/

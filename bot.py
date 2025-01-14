@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands, tasks
 from dotenv import dotenv_values
 from main import search_exalted
-
+from discord.utils import get
 
 config = dotenv_values(".env")
 TOKEN = config["DISCORD_TOKEN"]
@@ -19,5 +19,5 @@ async def on_ready():
 async def price(ctx):
     data = search_exalted()
     for item in data:
-        await ctx.send(f"{item['currency_name']}: {item['price_value']} Exalted -> {item['exchange_price_value']} {item['currency_name']}")
+        await ctx.send(f" <:{item['formatted_currency_name']}:{item['emoji_id']}>  {item['currency_name']}: {item['price_value']} Exalted -> {item['exchange_price_value']} {item['currency_name']}")
 bot.run(TOKEN)

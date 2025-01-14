@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import json
 
 def init_driver():
     options = Options()
@@ -46,12 +47,26 @@ def search_exalted():
                     exchange_price_value_span = price_arrow_span.find_next('span', {'class': 'price-value'})
                     if exchange_price_value_span:
                         exchange_price_value = exchange_price_value_span.text
+                        formatted_currency_name = currency_name.replace(" ", "").replace("'", "")
+                        
+                        
+                        with open('emoji.json', 'r') as f:
+                            emoji_data = json.load(f)
+
+                        for emoji in emoji_data:
+                            if emoji['emoji_name'] == formatted_currency_name:
+                                emoji_id = emoji['emoji_id']
+                                break
+                        else:
+                            emoji_id = None
+
                         data.append({
                             'currency_name': currency_name,
                             'price_value': price_value,
-                            'exchange_price_value': exchange_price_value
+                            'exchange_price_value': exchange_price_value,
+                            'formatted_currency_name': formatted_currency_name,
+                            'emoji_id': emoji_id
                         })
-                        
     last_update = soup.find('div', {'class': 'timestamp'}).text
     if last_update:
         print(f"Last update: {last_update}")
@@ -66,5 +81,3 @@ def search_exalted():
     
     return data
 
-
-search_exalted()

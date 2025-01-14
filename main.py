@@ -51,10 +51,15 @@ def search_exalted():
                             'price_value': price_value,
                             'exchange_price_value': exchange_price_value
                         })
+                        
+    last_update = soup.find('div', {'class': 'timestamp'}).text
+    if last_update:
+        print(f"Last update: {last_update}")
+        
     
-    driver.quit()
     
     for item in data:
         print(f"{item['currency_name']}: {item['price_value']} Exalted -> {item['exchange_price_value']} {item['currency_name']}")
 
+    driver.quit()
 search_exalted()

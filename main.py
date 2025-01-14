@@ -58,8 +58,13 @@ def search_exalted():
         
     
     
-    for item in data:
-        print(f"{item['currency_name']}: {item['price_value']} Exalted -> {item['exchange_price_value']} {item['currency_name']}")
+    # for item in data:
+    #     print(f"{item['currency_name']}: {item['price_value']} Exalted -> {item['exchange_price_value']} {item['currency_name']}")
 
+    print(data)
     driver.quit()
+    
+    return data
+
+
 search_exalted()

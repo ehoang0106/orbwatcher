@@ -47,6 +47,7 @@ async def start(ctx):
 
 @bot.command(name='price')
 async def price(ctx):
+  await ctx.send("Fetching prices...")
   await send_price_updates()
 
 bot.run(TOKEN)

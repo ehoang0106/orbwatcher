@@ -18,7 +18,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="Path of Exile 2"))
     
 
-@tasks.loop(minutes=60)
+@tasks.loop(hours=3)
 async def send_price_updates():
   channel = bot.get_channel(int(CHANNEL_ID))
   if channel is None:

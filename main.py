@@ -49,10 +49,10 @@ def search_exalted():
                         exchange_price_value = exchange_price_value_span.text
                         formatted_currency_name = currency_name.replace(" ", "").replace("'", "")
                         
-                        
+                        #load emoji data from json file
                         with open('emoji.json', 'r') as f:
                             emoji_data = json.load(f)
-
+                        #search for emoji id
                         for emoji in emoji_data:
                             if emoji['emoji_name'] == formatted_currency_name:
                                 emoji_id = emoji['emoji_id']

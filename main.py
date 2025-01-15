@@ -71,12 +71,6 @@ def search_exalted():
     if last_update:
         print(f"{last_update}")
         
-    
-    
-    # for item in data:
-    #     print(f"{item['currency_name']}: {item['price_value']} Exalted -> {item['exchange_price_value']} {item['currency_name']}")
-
-    #print(data)
     driver.quit()
     
     return data

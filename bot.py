@@ -21,11 +21,12 @@ async def on_ready():
 
 @tasks.loop(hours=3)
 async def send_price_updates():
+  
   channel = bot.get_channel(int(CHANNEL_ID))
   if channel is None:
       print("Channel not found")
       return
-
+  await channel.send("Fetching prices...")
   data = search_exalted()
   message = ""
   for item in data:
@@ -49,6 +50,18 @@ async def start(ctx):
 @bot.command(name='price')
 async def price(ctx):
   await ctx.send("Fetching prices...")
-  await send_price_updates()
+  data = search_exalted()
+  message = ""
+  for item in data:
+      part = f"<:{item['formatted_currency_name']}:{item['emoji_id']}> **{item['currency_name']}**: <:ExaltedOrb:1328816616854523924> **`{item['price_value']}`** -> <:{item['formatted_currency_name']}:{item['emoji_id']}> **`{item['exchange_price_value']}`**\n"
+      if len(message) + len(part) > 2000:
+          await ctx.send(message)
+          message = part
+      else:
+          message += part
+
+  if message:
+      await ctx.send(message)
+  await ctx.send(f"Last update: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 bot.run(TOKEN)

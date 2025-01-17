@@ -21,9 +21,9 @@ def init_driver():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
-def search_exalted():
+def search_prices(type):
     driver = init_driver()
-    url = "https://orbwatch.trade/"
+    url = f"https://orbwatch.trade/#{type}"
     driver.get(url)
     
     WebDriverWait(driver, 10).until(
@@ -47,7 +47,7 @@ def search_exalted():
                     exchange_price_value_span = price_arrow_span.find_next('span', {'class': 'price-value'})
                     if exchange_price_value_span:
                         exchange_price_value = exchange_price_value_span.text
-                        formatted_currency_name = currency_name.replace(" ", "").replace("'", "")
+                        formatted_currency_name = currency_name.replace(" ", "").replace("'", "").replace("(", "").replace(")", "")
                         
                         #load emoji data from json file
                         with open('emoji.json', 'r') as f:

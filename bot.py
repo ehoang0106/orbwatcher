@@ -58,6 +58,11 @@ async def get_price(ctx, type):
   message = ""
   for item in data:
       part = f"<:{item['formatted_currency_name']}:{item['emoji_id']}> **{item['currency_name']}**: <:ExaltedOrb:1328816616854523924> **`{item['price_value']}`** -> <:{item['formatted_currency_name']}:{item['emoji_id']}> **`{item['exchange_price_value']}`**\n"
+      
+      if item['emoji_id'] is None:
+        part = f"**{item['currency_name']}**: <:ExaltedOrb:1328816616854523924> **`{item['price_value']}`** -> **`{item['exchange_price_value']}`**\n"
+        
+      
       if len(message) + len(part) > 2000:
           await ctx.send(message)
           message = part

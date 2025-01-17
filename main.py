@@ -9,9 +9,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import json
 import boto3
+from boto3.dynamodb.conditions import Key
 from datetime import datetime
 import pytz
-
+from decimal import Decimal, InvalidOperation
 
 def init_driver():
     options = Options()
@@ -26,7 +27,7 @@ def init_driver():
     return driver
 
 
-def insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date):
+def insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date, price_change, percentage_change):
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamodb.Table('orbwatcher')
     response = table.put_item(
@@ -35,11 +36,28 @@ def insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price
             'currency_name': currency_name,
             'price_value': price_value,
             'exchange_price_value': exchange_price_value,
-            'date': date
+            'date': date,
+            'price_change': price_change,
+            'percentage_change': percentage_change
         }
     )
     return response
 
+def get_previous_price(currency_id):
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
+    table = dynamodb.Table('orbwatcher')
+    
+    response = table.query(
+        KeyConditionExpression=Key('currency_id').eq(currency_id),
+        ScanIndexForward=False,
+        Limit=1
+    )
+    
+    if response['Items']:
+        return response['Items'][0]['price_value']
+    else:
+        return None
+    
 
 def search_prices(type):
     driver = init_driver()
@@ -80,6 +98,21 @@ def search_prices(type):
                                 break
                         else:
                             emoji_id = None
+                            
+                        previous_price = get_previous_price(currency_id)
+                        try:
+                            if previous_price is not None:
+                                previous_price = Decimal(previous_price)
+                                price_value = Decimal(price_value)
+                                price_change = price_value - previous_price
+                                percentage_change = (price_change / previous_price) * 100
+                            else:
+                                price_change = None
+                                percentage_change = None
+                        except InvalidOperation:
+                            price_change = None
+                            percentage_change = None
+                        
 
                         data.append({
                             'currency_id': currency_id,
@@ -87,12 +120,14 @@ def search_prices(type):
                             'price_value': price_value,
                             'exchange_price_value': exchange_price_value,
                             'formatted_currency_name': formatted_currency_name,
-                            'emoji_id': emoji_id
+                            'emoji_id': emoji_id,
+                            'price_change': price_change,
+                            'percentage_change': percentage_change
                         })
                         
                         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M")
                         #insert data into dynamodb
-                        insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date)
+                        insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date, price_change, percentage_change)
                         
     last_update = soup.find('div', {'class': 'timestamp'}).text
     if last_update:

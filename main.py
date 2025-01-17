@@ -27,7 +27,7 @@ def init_driver():
     return driver
 
 
-def insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date, price_change, percentage_change):
+def insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date):
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamodb.Table('orbwatcher')
     response = table.put_item(
@@ -37,8 +37,7 @@ def insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price
             'price_value': price_value,
             'exchange_price_value': exchange_price_value,
             'date': date,
-            'price_change': price_change,
-            'percentage_change': percentage_change
+
         }
     )
     return response
@@ -99,19 +98,7 @@ def search_prices(type):
                         else:
                             emoji_id = None
                             
-                        previous_price = get_previous_price(currency_id)
-                        try:
-                            if previous_price is not None:
-                                previous_price = Decimal(previous_price)
-                                price_value = Decimal(price_value)
-                                price_change = price_value - previous_price
-                                percentage_change = (price_change / previous_price) * 100
-                            else:
-                                price_change = None
-                                percentage_change = None
-                        except InvalidOperation:
-                            price_change = None
-                            percentage_change = None
+                    
                         
 
                         data.append({
@@ -120,14 +107,13 @@ def search_prices(type):
                             'price_value': price_value,
                             'exchange_price_value': exchange_price_value,
                             'formatted_currency_name': formatted_currency_name,
-                            'emoji_id': emoji_id,
-                            'price_change': price_change,
-                            'percentage_change': percentage_change
+                            'emoji_id': emoji_id
+                            
                         })
                         
                         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M")
                         #insert data into dynamodb
-                        insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date, price_change, percentage_change)
+                        insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date)
                         
     last_update = soup.find('div', {'class': 'timestamp'}).text
     if last_update:

@@ -4,3 +4,4 @@ source.html
 __pycache__/
 .terraform/
 .terraform.lock.hcl
+/img

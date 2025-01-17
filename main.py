@@ -8,6 +8,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import json
+import boto3
+from datetime import datetime
+import pytz
+
 
 def init_driver():
     options = Options()
@@ -20,6 +24,21 @@ def init_driver():
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
+
+
+def insert_into_dyanmodb(currency_name, price_value, exchange_price_value, date):
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
+    table = dynamodb.Table('orbwatcher')
+    response = table.put_item(
+        Item={
+            'currency_name': currency_name,
+            'price_value': price_value,
+            'exchange_price_value': exchange_price_value,
+            'date': date
+        }
+    )
+    return response
+
 
 def search_prices(type):
     driver = init_driver()
@@ -67,11 +86,18 @@ def search_prices(type):
                             'formatted_currency_name': formatted_currency_name,
                             'emoji_id': emoji_id
                         })
+                        
+                        date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
+                        #insert data into dynamodb
+                        insert_into_dyanmodb(currency_name, price_value, exchange_price_value, date)
+                        
     last_update = soup.find('div', {'class': 'timestamp'}).text
     if last_update:
         print(f"{last_update}")
-        
+    
+
     driver.quit()
     
     return data
 
+search_prices('currency')

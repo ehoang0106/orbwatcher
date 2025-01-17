@@ -123,5 +123,3 @@ def search_prices(type):
     driver.quit()
     
     return data
-
-search_prices('currency')

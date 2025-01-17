@@ -26,11 +26,12 @@ def init_driver():
     return driver
 
 
-def insert_into_dyanmodb(currency_name, price_value, exchange_price_value, date):
+def insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date):
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamodb.Table('orbwatcher')
     response = table.put_item(
         Item={
+            'currency_id': currency_id,
             'currency_name': currency_name,
             'price_value': price_value,
             'exchange_price_value': exchange_price_value,
@@ -58,6 +59,7 @@ def search_prices(type):
         currency_name_span = row.find('span', {'data-tooltip-id': True})
         if currency_name_span:
             currency_name = currency_name_span.text
+            currency_id = currency_name_span['data-tooltip-id']
             price_value_span = row.find('span', {'class': 'price-value'})
             if price_value_span:
                 price_value = price_value_span.text
@@ -80,6 +82,7 @@ def search_prices(type):
                             emoji_id = None
 
                         data.append({
+                            'currency_id': currency_id,
                             'currency_name': currency_name,
                             'price_value': price_value,
                             'exchange_price_value': exchange_price_value,
@@ -89,7 +92,7 @@ def search_prices(type):
                         
                         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
                         #insert data into dynamodb
-                        insert_into_dyanmodb(currency_name, price_value, exchange_price_value, date)
+                        insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date)
                         
     last_update = soup.find('div', {'class': 'timestamp'}).text
     if last_update:

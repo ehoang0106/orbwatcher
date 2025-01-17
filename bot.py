@@ -76,7 +76,65 @@ async def price_currency(ctx, type="currency"):
 async def price_waystones(ctx, type="waystones"):
   await get_price(ctx, type)
 
+@bot.command(name='runes', aliases=['r'], help="Get the latest prices of runes")
+async def price_runes(ctx, type="runes"):
+  await get_price(ctx, type)
+
+@bot.command(name='essences', aliases=['e'], help="Get the latest prices of essences")
+async def price_essences(ctx, type="essences"):
+  await get_price(ctx, type)
+
+@bot.command(name='gems', aliases=['g'], help="Get the latest prices of gems")
+async def price_gems(ctx, type="gems"):
+  await get_price(ctx, type)
+
+@bot.command(name='uniques', aliases=['u'], help="Get the latest prices of uniques")
+async def price_uniques(ctx, type="uniques"):
+  await get_price(ctx, type)
+
+@bot.command(name='fragments', aliases=['f'], help="Get the latest prices of fragments")
+async def price_fragments(ctx, type="fragments"):
+  await get_price(ctx, type)
   
+@bot.command(name='soulcores', aliases=['s'], help="Get the latest prices of soul cores")
+async def price_soulcores(ctx, type="soulcores"):
+  await get_price(ctx, type)
+  
+@bot.command(name='breachcatalysts', aliases=['b'], help="Get the latest prices of breach catalysts")
+async def price_breachcatalysts(ctx, type="breachcatalysts"):
+  await get_price(ctx, type)
+
+@bot.command(name='expedition', aliases=['ex'], help="Get the latest prices of expedition")
+async def price_expedition(ctx, type="expedition"):
+  await get_price(ctx, type)
+
+@bot.command(name='ritualomens', aliases=['ro'], help="Get the latest prices of ritual omens")
+async def price_ritualomens(ctx, type="ritualomens"):
+  await get_price(ctx, type)
+  
+@bot.command(name='deliriumdistillations', aliases=['dd'], help="Get the latest prices of delirium distillations")
+async def price_deliriumdistillations(ctx, type="deliriumdistillations"):
+  await get_price(ctx, type)
+  
+@bot.command(name='h', help="List all available commands")
+async def help(ctx):
+  message = """
+  **`-price`** or **`-p`** - Get the latest prices of currency
+  **`-waystones`** or **`-w`** - Get the latest prices of waystones
+  **`-runes`** or **`-r`** - Get the latest prices of runes
+  **`-essences`** or **`-e`** - Get the latest prices of essences
+  **`-gems`** or **`-g`** - Get the latest prices of gems
+  **`-uniques`** or **`-u`** - Get the latest prices of uniques
+  **`-fragments`** or **`-f`** - Get the latest prices of fragments
+  **`-soulcores`** or **`-s`** - Get the latest prices of soul cores
+  **`-breachcatalysts`** or **`-b`** - Get the latest prices of breach catalysts
+  **`-expedition`** or **`-ex`** - Get the latest prices of expedition
+  **`-ritualomens`** or **`-ro`** - Get the latest prices of ritual omens
+  **`-deliriumdistillations`** or **`-dd`** - Get the latest prices of delirium distillations
+  **`-start`** - Start tracking prices every 3 hours
+  **`-stop`** - Stop tracking prices
+  """
+  await ctx.send(message)  
   
   
 @bot.event

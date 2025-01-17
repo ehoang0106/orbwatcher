@@ -90,7 +90,7 @@ def search_prices(type):
                             'emoji_id': emoji_id
                         })
                         
-                        date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
+                        date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M")
                         #insert data into dynamodb
                         insert_into_dyanmodb(currency_id, currency_name, price_value, exchange_price_value, date)
                         

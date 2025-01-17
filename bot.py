@@ -10,7 +10,7 @@ TOKEN = config["DISCORD_TOKEN"]
 PREFIX = "-"
 CHANNEL_ID = config["DISCORD_CHANNEL_ID"]
 
-bot = commands.Bot(command_prefix=PREFIX)
+bot = commands.Bot(command_prefix=PREFIX, help_command=None)
 
 @bot.event
 async def on_ready():
@@ -121,7 +121,7 @@ async def price_ritualomens(ctx, type="ritualomens"):
 async def price_deliriumdistillations(ctx, type="deliriumdistillations"):
   await get_price(ctx, type)
   
-@bot.command(name='h', help="List all available commands")
+@bot.command(name='help', alias=['h'], help="List all available commands")
 async def help(ctx):
   message = """
   **`-price`** or **`-p`** - Get the latest prices of currency

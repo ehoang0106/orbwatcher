@@ -16,7 +16,7 @@ bot = commands.Bot(command_prefix=PREFIX, help_command=None)
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
     await bot.change_presence(activity=discord.Game(name="Path of Exile 2 | -help"))
-    #send_price_updates.start()
+    send_price_updates.start()
     
 
 @tasks.loop(hours=3)

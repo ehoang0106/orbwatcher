@@ -5,3 +5,5 @@ __pycache__/
 .terraform/
 .terraform.lock.hcl
 /img
+test.py
+output.json

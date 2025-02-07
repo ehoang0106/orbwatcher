@@ -22,6 +22,7 @@ def init_driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--log-level=3")
     options.add_argument("--remote-debugging-port=0")
+    options.add_argument("--enable-unsafe-swiftshader")
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver

@@ -19,7 +19,7 @@ async def on_ready():
     send_price_updates.start()
     
 
-@tasks.loop(hours=3)
+@tasks.loop(hours=24)
 async def send_price_updates():
   
   channel = bot.get_channel(int(CHANNEL_ID))
